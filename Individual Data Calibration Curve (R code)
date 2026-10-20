@@ -1,0 +1,45 @@
+# Calibration data
+concentration <- c(0.5, 1, 2, 4, 6, 8, 10)
+absorbance_Tue  <- c(0.003, 0.056, 0.185, 0.820, 0.675, 1.146, 1.539)
+
+# Plot scatter points, with data from group Tue
+plot(concentration, absorbance_Tue,
+     
+     pch = 16, # Solid circles for the data points
+     col = "red",    # Color of the data points
+     main = "Individual Data Calibration Curve",
+     xlab = "Concentration (mM)", 
+     ylab = "Absorbance",
+     las = 1,               #label style, axis labels
+     xlim = c(0, 10), ylim = c(0, 1.8), # Set limits on x and y axis so all data can be displayed
+)
+# Calculate error bounds
+error_margin <- 0.001
+error_lower <- absorbance_Tue - error_margin
+error_upper <- absorbance_Tue + error_margin
+
+# Draw error bars
+arrows(x0 = concentration, y0 = error_lower, 
+       x1 = concentration, y1 = error_upper,
+       code = 3, angle = 90, length = 0.05, col = "black")
+
+# Linear regression Line
+calibration_model <- lm(absorbance_Tue ~ concentration)
+abline(calibration_model, col = "blue", lwd = 2, lty = 1) # Solid blue line
+
+# Add legend to label linear regression line
+legend("topleft", 
+       legend = c("Group Tue Data", "Linear Regression Line"), 
+       col = c("red", "blue"),
+       pch = c(16, NA),
+       lwd = c(NA, 2),
+)
+
+# Fetch and display data about linear regression model
+summary(calibration_model)
+text(x = 6, y = 0.3,
+     labels = "y = 0.15607x - 0.07031
+Intercept =  -0.07031
+     Multiple R-squared:  0.944
+     Error bars reflect spectrophotometer uncertainty (± 0.001)", col = "black", cex = 1, font = 1
+)
