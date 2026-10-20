@@ -1,3 +1,5 @@
+#This is R code for Combined Data Calibration Curve
+
 # Calibration data
 concentration <- c(0.5, 1, 2, 4, 6, 8, 10)
 absorbance_Tue  <- c(0.003, 0.056, 0.185, 0.820, 0.675, 1.146, 1.539)
