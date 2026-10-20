@@ -1,0 +1,64 @@
+# Calibration data
+concentration <- c(0.5, 1, 2, 4, 6, 8, 10)
+absorbance_Tue  <- c(0.003, 0.056, 0.185, 0.820, 0.675, 1.146, 1.539)
+absorbance_Thur <- c(0.173, 0.232, 0.580, 1.163, 1.754, 2.241, 2.609)
+
+# Plot scatter points, with data from group Tue
+plot(concentration, absorbance_Tue,
+     
+     pch = 16, # Solid circles for the data points
+     col = "red",    # Color of the data points
+     main = "Combined Data Calibration Curve",
+     xlab = "Concentration (mM)", 
+     ylab = "Absorbance",
+     las = 1,               #label style, axis labels
+     xlim = c(0, 10), ylim = c(0, 3), # Set limits on x and y axis so all data can be displayed
+     )
+
+# Plot scatter points with data from group Thur over the same graph 
+points(concentration, absorbance_Thur,
+       
+       pch = 15,            # Solid squares for data points
+       col = "darkgreen",   # Color of the data points
+       )
+
+# Calculate error bounds
+error_margin <- 0.001
+error_lowerTue <- absorbance_Tue - error_margin
+error_upperTue <- absorbance_Tue + error_margin
+error_lowerThur <- absorbance_Thur - error_margin
+error_upperThur <- absorbance_Thur + error_margin
+
+# Draw error bars Tue
+arrows(x0 = concentration, y0 = error_lowerTue, 
+       x1 = concentration, y1 = error_upperTue,
+       code = 3, angle = 90, length = 0.05, col = "black")
+
+# Draw error bars Thur
+arrows(x0 = concentration, y0 = error_lowerThur, 
+       x1 = concentration, y1 = error_upperThur,
+       code = 3, angle = 90, length = 0.05, col = "black")
+
+# Linear regression Line
+combined_absorbance <- c(absorbance_Tue, absorbance_Thur) #combine concentration values so we can evaluate them together in linear regression
+combined_concentration <- c(concentration, concentration) #format concentration values for a linear regression involving two absorbance sets
+calibration_model <- lm(combined_absorbance ~ combined_concentration)
+abline(calibration_model, col = "blue", lwd = 2, lty = 1) # Solid blue line
+   
+# Add legend to label linear regression line
+legend("topleft", 
+  legend = c("Group Tue Data", "Group Thur Data", "Linear Regression Line"), 
+  col = c("red", "darkgreen", "blue"),
+  pch = c(16, 15, NA),
+  lwd = c(NA, NA, 2),
+  )
+
+# Fetch and display data about linear regression model
+summary(calibration_model)
+text(x = 2.2, y = 1.6,
+labels = "y = 0.21192x - 0.01252
+Intercept =  -0.01252
+     Multiple R-squared:  0.7826
+Error bars reflect spectrophotometer-
+uncertainty (± 0.001)", col = "red", cex = 1, font = 1
+     )
